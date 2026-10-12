@@ -456,13 +456,19 @@ async function resolveTarget(
   return { isOk: false, status: null, reason: 'no deployment to act on; pass deployment_id.' }
 }
 
-/** A tool result the model reads as a failure, carrying the platform's words. */
-function failed(reason: string) {
-  return { result: { content: [{ type: 'text', text: reason }], isError: true } }
+/** The tool's answer: the text the model reads. */
+function ok(text: string) {
+  return { result: text }
 }
 
-function ok(text: string) {
-  return { result: { content: [{ type: 'text', text }], isError: false } }
+/**
+ * A refusal: the model reads the platform's own words as an error result, the
+ * way it reads a built-in tool that failed. The engine holds a plugin tool's
+ * result to a string, an array or nothing — never the `{ content, isError }`
+ * envelope an MCP server sends — so an error is denied rather than wrapped.
+ */
+function failed(reason: string) {
+  return { deny: reason }
 }
 
 /** The plugin's options as the client wants them: two strings, always. */

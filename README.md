@@ -95,6 +95,11 @@ claude plugin validate . --strict   # manifests, and what the module hooks
 claude plugin test ./uniform        # the plugin's own tests
 ```
 
+The tests answer `$.http.fetch` from a fixed body, so they cover each tool's
+request and what it does with the platform's answer — a 404 whose `detail` the
+model reads, a listing, a deploy's body, a log tail — without a platform. What
+a running platform really says is checked in a session, against one.
+
 To type-check it, copy this build's API declarations beside the plugin as
 `uniform/.claude-plugin/types/claude-code/index.d.ts` and run `tsc -p uniform`.
 
@@ -107,5 +112,5 @@ uniform/
   hooks/register.tsx              the hooks module: tools, command, pane, poll
   hooks/client.ts                 the platform's REST API, and its error shape
   types/index.d.ts                the contract for the values kept in $.state
-  tests/uniform.test.ts           what the test kit can check without a platform
+  tests/uniform.test.ts           the tools, the command, the pane, the client
 ```
